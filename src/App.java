@@ -10,6 +10,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         
         // fazer a conexão HTTP com a API de filmes (top 250 filmes)
+        // https://imdb-api.com/en/API/Top250Movies/ + SUA-API-KEY
         String url = "https://api.mocki.io/v2/549a5d8b";
         URI endereco = URI.create(url);        
         HttpClient client = HttpClient.newHttpClient();
