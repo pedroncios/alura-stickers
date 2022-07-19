@@ -5,12 +5,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class JsonParser {
 
     private static final Pattern REGEX_ITEMS = Pattern.compile(".*\\[(.+)\\].*");
     private static final Pattern REGEX_ATRIBUTOS_JSON = Pattern.compile("\"(.+?)\":\"(.*?)\"");
 
-    public List<Map<String, String>> parse(String json) {
+    public List<Map<String, String>> parseUsingRegex(String json) {
         
         Matcher matcher = REGEX_ITEMS.matcher(json);
 
@@ -35,6 +38,14 @@ public class JsonParser {
 
             dados.add(atributosItem);
         }
+
+        return dados;
+    }
+
+    public ListaDeItens parseUsingGson(String json) {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();        
+        ListaDeItens dados = gson.fromJson(json, ListaDeItens.class);
 
         return dados;
     }
