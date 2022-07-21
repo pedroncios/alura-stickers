@@ -1,8 +1,9 @@
-<center>
-<h1>Imersão Java - Alura Stickers</h1>
+<h1 align="center">Imersão Java - Alura Stickers</h1>
+
+<p align="center">
 <img src="https://img.shields.io/badge/Java-11-red" />
 <img src="https://img.shields.io/badge/status-em%20desenvolvimento-informational" />
-</center>
+</p>
 
 ### Tópicos 
 
