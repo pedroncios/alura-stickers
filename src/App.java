@@ -1,42 +1,40 @@
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.util.Map;
+import java.util.List;
 
 public class App {
     public static void main(String[] args) throws Exception {
         
-        // fazer a conexão HTTP com a API de filmes (top 250 filmes)
+        // API de filmes IMDB (top 250 filmes)
         // https://imdb-api.com/en/API/Top250Movies/ + SUA-API-KEY
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java/api/TopMovies.json";
-        URI endereco = URI.create(url);        
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(endereco).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
-        
-        // extrair os dados do retorno (titulo, poster e avaliação)
-        JsonParser parser = new JsonParser();
-        //List<Map<String, String>> listaDeFilmes = parser.parseUsingRegex(body);
-        ListaDeItens listaDeFilmes = parser.parseUsingGson(body);
+        //String url = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
+        //ExtratorDeConteudoIMDB extrator = new ExtratorDeConteudoIMDB();
 
+        // API da NASA
+        // https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY
+        String url = "https://api.mocki.io/v2/549a5d8b/NASA-APOD";
+        ExtratorDeConteudoNASA extrator = new ExtratorDeConteudoNASA();
+
+        // fazer a conexão HTTP com a API
+        ClienteHttp http = new ClienteHttp();
+        // Resgata o json (retorno da API)
+        String json = http.buscaDados(url);        
+        // Extrai as informações do JSON transformando em objeto (List<Conteudo>)
+        List<Conteudo> conteudos = extrator.extrair(json);
+
+        // Cria o gerador de figurinhas
         GeradorDeFigurinhas gerador = new GeradorDeFigurinhas();
-        // exibir os dados
-        for (Map<String,String> filme : listaDeFilmes.items) {
+        
+        // Gera as figurinhas
+        for (Conteudo conteudo : conteudos) {
             
-            String urlImagem = filme.get("image");
-            String titulo = filme.get("title");
-            String rank = filme.get("rank");
-
-            System.out.println("Gerando figurinha do filme: " + titulo + "...");
+            String titulo = conteudo.getTitulo();
+            String urlImagem = conteudo.getUrlImagem();
+            
+            System.out.println("Gerando figurinha: " + titulo + "...");
 
             InputStream stream = new URL(urlImagem).openStream();
-            String nomeArquivo = rank + ".png";
-            
+            String nomeArquivo = titulo + ".png";            
             gerador.criar(stream, nomeArquivo);
         }
     }

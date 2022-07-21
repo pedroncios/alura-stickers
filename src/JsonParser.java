@@ -42,10 +42,11 @@ public class JsonParser {
         return dados;
     }
 
-    public ListaDeItens parseUsingGson(String json) {
+    // Uso de Generics para converter o json em um tipo de objeto específico e retorná-lo
+    public <T> T parseUsingGson(String json, Class<T> tipo) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();        
-        ListaDeItens dados = gson.fromJson(json, ListaDeItens.class);
+        T dados = gson.fromJson(json, tipo);
 
         return dados;
     }
